@@ -1,8 +1,8 @@
 ---
 title: "初心者セッション"
-subtitle: "R入門〜データハンドリング"
+subtitle: "データ読み込み〜データハンドリング"
 author: "y__mattu"
-date: "2021/1/23 TokyoR #89"
+date: "2021/3/6 TokyoR #89"
 output:
   revealjs::revealjs_presentation:
     self_contained: false
@@ -41,7 +41,7 @@ options(dplyr.print_max = 1e9)
 <div class="column1">
 - 松村優哉
 - <u>Twitter</u>: **y\_\_mattu**
-- 人材・HR Tech系で働くデータ屋さん
+- 人材・HR Tech系で働くデータ分析屋さん
 - 学生時代: 計量経済学、ベイズ統計、因果推論、マーケティング
 - R歴: 7年目
 - https://ymattu.github.io/
@@ -57,17 +57,18 @@ options(dplyr.print_max = 1e9)
 ## この資料の目的
 - R 初心者（触ったことはあるけど、なんかよくわからない）が、雰囲気を掴む
 
+### 前提知識
+- Rはパッケージを使って様々な機能拡張ができる
+
 ## Contents {#contents}
-- R と RStudio について 
 - tidyverse について
-- テーブルデータの読み込み
+- データの読み込み
 - データハンドリング
-- 統計学・モデリング・可視化については触れません。
 
 ## 注意 {#attention}
 - 扱う範囲が広く資料の分量が多いので、特に重要なところをピックアップしながら進めます。
 - 参考リンクも多いので資料は後でじっくり御覧ください。
-- パッケージ名だけでも覚えてかえっていただけると嬉しいです。
+- パッケージ名だけでも覚えていただけると嬉しいです。
 
 ## データ分析の(おおまかな)流れ {#flow_of_analysis}
 ```{r echo=FALSE}
@@ -91,49 +92,7 @@ digraph data_analytics {
 ```
 
 
-# RとRStudioについて {#r_and_rstudio}
-## Rとは {#aboutR}
-- 統計解析およびその周辺環境に強いプログラミング言語
-    - データの読み込み（ローカル, Webページ, DB）
-    - データハンドリング
-    - モデリング
-    - 可視化
-- 最近はWebアプリやAPI作成など、「プロダクションレベル」を支えられるような環境も整いつつある
-- また、機械学習やディープラーニングなど、これまでPythonに優位性があった手法も多くカバーされるようになってきた
-    - tidymodels, keras, torchなど
-- プログラミング未経験でも始めやすい(個人的な感想) 
 
-
-## R の環境構築 {#installR}
-- R のインストールは、[CRAN](https://www.r-project.org/)から、自分のOSに合ったものを。
-- 2021/1/23時点の最新版は、4.0.3
-    - 本日の講義内容に関しては、3.X.X以上であれば概ね問題ないと思われます
-- 3.X.X→4.X.Xの変更点
-    - [R 4.0.0 リリース - Qiita](https://qiita.com/piccolist/items/80f47a11d68dfe904cca)
-    - [R 4.0.0 の破壊的変更まとめ - Qiita](https://qiita.com/five-dots/items/6dc28ece9afa5b1b053c)
-- おすすめのIDE（統合開発環境）は、[RStudio](https://rstudio.com/)
-
-## R のパッケージ {#packages}
-- R のパッケージを使うことで、世界中で開発されている便利な手法を使える
-- パッケージに含まれている関数を呼び出すことで、様々な拡張機能を使う
-- パッケージは、関数の集まり
-- CRANに登録されているものは、`install.packages("パッケージ名")` でインストール
-    - 例: `install.packages("ggplot2")`
-
-## パッケージ内の関数の表記
-- **readr** パッケージの read_csv 関数を使いたいとき
-```{r eval=FALSE}
-# 方法 1
-library(readr)
-dat <- read_csv("hoge.csv")
-# 方法 2
-dat <- readr::read_csv("hoge.csv")
-```
-
-- 特に、「方法2」は関数が所属するパッケージを明示することで、あとから見たときにコードの確認がしやすかったり、他の人と共有する際に分かりやすいなど、利点が多く個人的にはおすすめ
-- ただし、本資料では直感的なわかりやすさを優先し「方法1」を多く使います
-
-# データハンドリング編 {#chapter_data_handling}
 # tidyverse {#tidyverse}
 ## tidyverse について {#abouttidyverse}
 ### tidyverse(概念)
@@ -228,68 +187,6 @@ dat <- readr::read_csv("sample.csv")
 ```{r eval=FALSE}
 library(data.table)
 dat <- fread("sample.csv", data.table = FALSE)
-```
-
-# 高速ってどのくらい速いのか？
-
-## 速度検証
-<div class="column1">
-### 検証用データ
-- ECサイトのログデータ <br> (を意識して作ったデータ)
-- csv
-- 100 万行× 3 列
-- 約 45MB
-- https://github.com/ymattu/SampleData
-</div>
-
-<div class="column2">
-### 検証環境
-- macOS Mojave 10.14.6
-- Corei7
-- メモリ 16GB
-- R 4.0.3
-</div>
-
-## 時間を計測
-```{r eval=TRUE}
-system.time(dat <- read.csv("data/Sales.csv"))
-system.time(dat2 <- readr::read_csv("data/Sales.csv"))
-system.time(dat3 <- data.table::fread("data/Sales.csv"))
-```
-
-## もっとちゃんと時間を知りたい
-- **microbench** パッケージ
-- 比較したい関数を1000回ずつとか実行して見やすく表示してくれる
-
-```{r, eval=FALSE}
-library(microbenchmark)
-file <- "data/Sales.csv"
-compare <- microbenchmark("read.csv()" = read.csv(file),
-                          "readr::read_csv()" = readr::read_csv(file),
-                          "data.table::fread()" = data.table::fread(file),
-                          times = 1000)
-```
-
-```{r, echo=FALSE}
-library(ggplot2)
-library(microbenchmark)
-compare <- readr::read_rds("inst/compare.RData")
-```
-
-
-## 結果1 {#result1}
-```{r, eval=FALSE}
-compare
-```
-|expr                |       min|        lq|      mean|    median|        uq|      max| neval|
-|:-------------------|---------:|---------:|---------:|---------:|---------:|--------:|-----:|
-|read.csv()          | 1871.3155| 2222.0066| 2361.4660| 2347.1315| 2452.3060| 4529.984|  1000|
-|readr::read_csv()   |  548.7358|  811.9076|  882.2824|  860.2287|  935.6320| 1759.994|  1000|
-|data.table::fread() |  557.9172|  617.1047|  648.5004|  643.6659|  664.1492| 1138.720|  1000|
-
-## 結果2 {#result2}
-```{r, echo=FALSE, fig.height = 10,fig.width = 30,}
-microbenchmark:::autoplot.microbenchmark(compare)
 ```
 
 # tsv
@@ -411,32 +308,6 @@ dat <- data.table::fread("sample.csv", data.table = FALSE) %>%
 ## RStudio の GUI 読み込み {#importdataset2}
 ![dataimport2](./slide_img/dataimport2.png)
 
-# データベース(クラウド)編
-## データベースやクラウド上のデータ
-- 企業にデータは膨大なのでクラウドにデータを置くことがとても多い
-- こういうデータを R から直接触れたら嬉しいですよね！
-
-## 便利パッケージたち
-- **DBI**(データベースへの接続)
-- **dplyr(dbplyr)**(データベースのテーブル操作)
-- **sparklyr**(Spark, AWS S3)
-- **bigrquery**(Big Query)
-- RStudio の Connection タブ
-
-## データベース関連の参考資料たち
-- [dplyr でデータベース操作](https://qiita.com/nozma/items/f9a20d9ce0f7bfbdf628)
-- [PostgreSQL からスキーマを指定してデータを参照する](https://qiita.com/uri/items/5a90f1c1c5edc8813c01)
-- [これからはコネの時代](https://speakerdeck.com/yutannihilation/korekarahakonefalseshi-dai)
-
-
-# もっといろいろ読み込めないのか？
-## R は他にもいろいろなデータを読み込めます {#others}
-- 地理情報データ( **sf** パッケージ)
-- 画像
-- 音声
-- etc...
-
-ググると、意外といろいろ出てきます
 
 # データハンドリング {#datahandling}
 
@@ -605,8 +476,6 @@ sum(1:3)
     - Windows: `Ctrl` + `Shift` + `M`
     - Mac: `Cmd` + `Shift` + `M`
 
-# dplyr {#nowdplyr}
-
 # 扱うデータ {#todaysdata}
 ## EC サイトのログデータ {#ecsitedata}
 - を意識して作ったダミーデータ
@@ -626,7 +495,7 @@ product <- read_csv("sampledata_small/csv/Products.csv")
 user_master <- read_csv("sampledata_small/csv/UserMaster.csv")
 ```
 
-# **dplyr** {#dplyr}
+# **dplyr** のデータハンドリング基礎 {#dplyr}
 ## 列選択 {#select}
 ```{r, eval=FALSE}
 sales %>%
@@ -1307,4 +1176,3 @@ df_ints %>%
     - dplyr, tidyrパッケージを用いたデータハンドリング
 
 ## ありがとうございました {#enjoy}
-enjoy!
