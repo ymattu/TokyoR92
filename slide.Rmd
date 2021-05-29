@@ -51,6 +51,7 @@ options(dplyr.print_max = 1e9)
 
 <div class="column2">
 ![icon](./slide_img/twitter_icon.jpg)
+![icon](./slide_img/bike.jpeg)
 </div>
 
 ## 宣伝(6/3発売（電子版は5/31） {#advertise}
