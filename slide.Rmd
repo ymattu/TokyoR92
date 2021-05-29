@@ -54,6 +54,7 @@ options(dplyr.print_max = 1e9)
 ![icon](./slide_img/bike.jpeg)
 </div>
 
+
 ## 宣伝(6/3発売（電子版は5/31） {#advertise}
 #### **改訂2版 R ユーザのための RStudio[実践]入門 <br> − tidyverse によるモダンな分析フローの世界−**
 <div class="column1">
