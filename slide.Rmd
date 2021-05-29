@@ -2,7 +2,7 @@
 title: "初心者セッション"
 subtitle: "データハンドリング"
 author: "y__mattu"
-date: "2021-05-29 TokyoR #89"
+date: "2021-05-29 TokyoR #92"
 output:
   revealjs::revealjs_presentation:
     self_contained: false
@@ -55,7 +55,7 @@ options(dplyr.print_max = 1e9)
 </div>
 
 
-## 宣伝(6/3発売（電子版は5/31） {#advertise}
+## 宣伝（6/3発売（電子版は5/31））{#advertise}
 #### **改訂2版 R ユーザのための RStudio[実践]入門 <br> − tidyverse によるモダンな分析フローの世界−**
 <div class="column1">
 ![rstudiobook](./slide_img/rstudiobook2.jpg)
