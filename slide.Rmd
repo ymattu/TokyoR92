@@ -45,8 +45,8 @@ options(dplyr.print_max = 1e9)
 - 学生時代: 計量経済学、ベイズ統計、因果推論、マーケティング
 - R歴: 7年目
 - https://ymattu.github.io/
-- http://y-mattu.hatenablog.com/
 - Tokyo.R 運営(初心者セッションとか)
+- 近況: ロードバイクにはまってます
 </div>
 
 <div class="column2">
